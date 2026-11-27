@@ -2,15 +2,15 @@
 
 Use this while you actually deploy something. Write what snagged, in the order it happened. A blank row is fine. Do not polish it.
 
-| When | Command         | What you expected | What happened | Fix, if you found one |
-| ---- | --------------- | ----------------- | ------------- | --------------------- |
-|      | `qan doctor`    |                   |               |                       |
-|      | `qan init`      |                   |               |                       |
-|      | `qan deploy`    |                   |               |                       |
-|      | wallet / faucet |                   |               |                       |
-|      | QVM slots       |                   |               |                       |
-|      | Apple Silicon   |                   |               |                       |
+| When       | Command         | What you expected         | What happened                                                                                                                                                                                                                                       | Fix, if you found one                                                                                               |
+| ---------- | --------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-27 | `qan doctor`    | chain 1121, a balance     | Docker 27.4.0, socket ok, image present, chain 1121. Balance 0. ARM64 warning. XLINK still a stub.                                                                                                                                                  | Platform came from `.env` `QAN_DOCKER_PLATFORM=linux/amd64`. Without that, doctor fails the arch check on this Mac. |
+|            | `qan init`      |                           | Not run. Deploy used the built-in defaults plus the env platform.                                                                                                                                                                                   |                                                                                                                     |
+| 2026-11-27 | `qan deploy`    | a Counter address         | First calls die with `create deployer failed` / `context deadline exceeded`. The next call compiles Counter and then `insufficient funds for transfer`. The CLI only printed `deploy contract failed` until the log parser kept the `error=` field. | Retry that deployer timeout once. Surface the gas error and point at the faucet. Success stdout is still unseen.    |
+| 2026-11-27 | wallet / faucet | 5 QANX on a fresh address | Browser request returned `RECAPTCHA_SCORE_LOW`. Address `0x983F02B773bA1574124136B15E6133367b7f9eCd` still has 0.                                                                                                                                   | A person has to submit the faucet in a normal browser. The key is only in the gitignored `.env`.                    |
+|            | QVM slots       |                           |                                                                                                                                                                                                                                                     |                                                                                                                     |
+| 2026-11-27 | Apple Silicon   | amd64 image runs          | It does, with `--platform linux/amd64`. Solidity got as far as gas estimation in about 8 seconds, so emulation was not the blocker.                                                                                                                 | Keep the platform in config.                                                                                        |
 
 Notes:
 
--
+- solc dropped `solc-build-cache/` in the repo root during the local ABI compile. It is gitignored now.
