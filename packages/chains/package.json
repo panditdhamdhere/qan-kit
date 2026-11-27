@@ -1,0 +1,31 @@
+{
+  "name": "@qan-kit/chains",
+  "version": "0.1.0",
+  "description": "viem and ethers definitions for QAN TestNet",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panditdhamdhere/qan-kit.git",
+    "directory": "packages/chains"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "ethers": "^6.15.0",
+    "viem": "^2.39.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1"
+  }
+}
