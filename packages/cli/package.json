@@ -1,0 +1,29 @@
+{
+  "name": "qan-kit",
+  "version": "0.1.0",
+  "description": "CLI for deploying to QAN testnet",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panditdhamdhere/qan-kit.git",
+    "directory": "packages/cli"
+  },
+  "bin": {
+    "qan": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@qan-kit/core": "workspace:*",
+    "commander": "^12.1.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1"
+  }
+}
