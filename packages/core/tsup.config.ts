@@ -8,5 +8,5 @@ export default defineConfig({
   dts: true,
   clean: true,
   sourcemap: true,
-  external: ['@qan-kit/chains'],
+  external: ['@qan-kit/chains', 'solc', 'viem', 'viem/accounts'],
 });

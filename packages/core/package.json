@@ -24,6 +24,8 @@
   "dependencies": {
     "@qan-kit/chains": "workspace:*",
     "execa": "^9.6.0",
+    "solc": "0.8.28",
+    "viem": "^2.39.0",
     "jiti": "^2.6.1",
     "ora": "^8.2.0",
     "picocolors": "^1.1.1",

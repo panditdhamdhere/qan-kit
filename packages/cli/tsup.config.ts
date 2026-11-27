@@ -9,5 +9,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   banner: { js: '#!/usr/bin/env node' },
-  external: ['@qan-kit/core'],
+  external: ['@qan-kit/chains', '@qan-kit/core'],
 });

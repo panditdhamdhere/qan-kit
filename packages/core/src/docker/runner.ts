@@ -105,6 +105,17 @@ export class DockerRunner {
     };
   }
 
+  async imagePresent(image: string): Promise<boolean> {
+    const inspect = await this.exec.exec('docker', [
+      'image',
+      'inspect',
+      image,
+      '--format',
+      '{{.Id}}',
+    ]);
+    return inspect.exitCode === 0 && inspect.stdout.trim().length > 0;
+  }
+
   async pull(image: string, mode: 'missing' | 'always' = 'missing'): Promise<void> {
     const status = await this.check();
     if (status.decision.error) throw status.decision.error;

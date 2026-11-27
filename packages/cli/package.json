@@ -19,6 +19,7 @@
     "build": "tsup"
   },
   "dependencies": {
+    "@qan-kit/chains": "workspace:*",
     "@qan-kit/core": "workspace:*",
     "commander": "^12.1.0",
     "picocolors": "^1.1.1"
