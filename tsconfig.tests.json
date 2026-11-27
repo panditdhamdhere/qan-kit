@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "types": ["node"],
+    "paths": {
+      "@qan-kit/chains": ["./packages/chains/src/index.ts"],
+      "@qan-kit/core": ["./packages/core/src/index.ts"]
+    }
+  },
+  "include": ["packages/**/*.test.ts"]
+}
