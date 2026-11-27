@@ -14,3 +14,4 @@ Use this while you actually deploy something. Write what snagged, in the order i
 Notes:
 
 - solc dropped `solc-build-cache/` in the repo root during the local ABI compile. It is gitignored now.
+- 2026-11-27 later: XLINK address `0xFed578b7Acb4D353440a067bed3b18404E59d4D0` had 10 QANX and was linked. Two deploys mined because a retry ran after qvmctl had already broadcast. qvmctl then timed out waiting for the receipt and exited 1, so `qan` did not save the file. Receipts: `0x64e24dcb6b3d9f313be2d96b5c273a00b9143376` (tx `0x9676e23f6ac4e58023f5c8d7c4035e681a58a337b9835019e96a4ab50ba20a4b`) and `0x35b2c56770a851a889ca4716100b2503c93d02bb`. The account is empty again. A zero-exit qvmctl success log is still unseen.

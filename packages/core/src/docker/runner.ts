@@ -181,6 +181,13 @@ export class DockerRunner {
       result = await this.execDocker(args);
     }
 
+    if (result.exitCode !== 0 && isAwaitTimeout(result)) {
+      this.ui.info(
+        'qvmctl broadcast the transaction, then lost the receipt. qan will wait for it.',
+      );
+      return result;
+    }
+
     if (result.exitCode !== 0) {
       const message = parseQvmctlFailure(result);
       throw new QanError(ErrorCodes.QVMCTL_FAILED, message, hintForQvmctl(message));
@@ -198,6 +205,14 @@ export class DockerRunner {
       },
     });
   }
+}
+
+function isAwaitTimeout(result: ExecResult): boolean {
+  const message = parseQvmctlFailure(result);
+  const text = `${result.stdout}\n${result.stderr}`;
+  return (
+    message.includes('failed to await transaction') && /0x[a-fA-F0-9]{64}(?![a-fA-F0-9])/.test(text)
+  );
 }
 
 function isDeployerTimeout(result: ExecResult): boolean {

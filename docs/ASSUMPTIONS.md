@@ -31,7 +31,7 @@ Anything still unknown is a config knob. Nothing below is filled in from memory.
 
 ## Not confirmed, so configurable
 
-- **Deploy stdout shape.** We did not complete a deploy (no funded key, and the RPC timed out from this network). The success parser looks for a labelled address and tx hash, then falls back to a single `0x` address and a single 32-byte hash. Override with `output.addressPattern` and `output.txHashPattern` if a real run doesn't match. Raw logs are kept next to the deployment file.
+- **Deploy stdout shape.** A funded XLINK key did broadcast Solidity deploys. qvmctl still exited 1 with `failed to await transaction` and `hash=0x...` because the RPC timed out before it printed a success summary. The contract address was on the receipt, not in that log. The success parser still looks for a labelled address and tx hash. Override with `output.addressPattern` and `output.txHashPattern` if a zero-exit run doesn't match. Raw logs are kept next to the deployment file.
 - **Public RPC from this machine.** It is intermittent. `qan doctor` has seen chain id 1121, and a later `urllib` call to the same URL timed out. `qvmctl deploy` hits `context deadline exceeded` on some runs and reaches gas estimation on the next. The live test stays behind `QAN_LIVE=1`. `rpcUrl` is config. There is no qvmctl flag for the HTTP timeout.
 - **Whether `DB_QVM_INITIALIZED` must be passed to `-r`.** Samples read it, and the docs' `-r` example does not list it. The slot scanner treats `QVM_INITIALIZED` as runtime-provided and does not warn when it is missing from `-r`. Other `DB_*` reads do warn.
 - **Constructor arguments** for Solidity. See the unused-args note above. There is no second code path that ABI-encodes them.

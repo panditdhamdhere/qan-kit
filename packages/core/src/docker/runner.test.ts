@@ -176,6 +176,35 @@ describe('DockerRunner', () => {
     });
   });
 
+  it('returns the log when qvmctl already broadcast and then lost the receipt', async () => {
+    const hash = `0x${'ab'.repeat(32)}`;
+    const { runner } = fakeExec((args) => {
+      if (args[0] === 'version') return { exitCode: 0, stdout: '27.4.0\n', stderr: '' };
+      if (args[0] === 'info') return { exitCode: 0, stdout: 'x86_64\n', stderr: '' };
+      return {
+        exitCode: 1,
+        stdout: '',
+        stderr: `level=error msg="failed to await transaction" error="context deadline exceeded" hash=${hash}\n`,
+      };
+    });
+    const docker = new DockerRunner({
+      exec: runner,
+      hostArch: 'x64',
+      ui: silentUi,
+      socketExists: () => false,
+      platform: 'linux',
+    });
+    const result = await docker.run({
+      image: 'qanplatform/qvmctl:latest',
+      projectDir: '/work',
+      containerWorkdir: '/ws',
+      mountDockerSocket: false,
+      qvmctlArgs: ['deploy'],
+    });
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toContain(hash);
+  });
+
   it('points an unbound key at the XLINK container', async () => {
     const { runner } = fakeExec((args) => {
       if (args[0] === 'version') return { exitCode: 0, stdout: '27.4.0\n', stderr: '' };
