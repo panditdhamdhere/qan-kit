@@ -1,0 +1,31 @@
+{
+  "name": "@qan-kit/hardhat",
+  "version": "0.1.0",
+  "description": "Hardhat network and qan:deploy task for QAN testnet",
+  "type": "commonjs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panditdhamdhere/qan-kit.git",
+    "directory": "packages/hardhat-plugin"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@qan-kit/chains": "workspace:*",
+    "@qan-kit/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "hardhat": "^2.22.0"
+  },
+  "devDependencies": {
+    "hardhat": "^2.26.3",
+    "tsup": "^8.5.1"
+  }
+}

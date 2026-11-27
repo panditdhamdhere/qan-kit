@@ -6,6 +6,7 @@
     "declaration": false,
     "declarationMap": false,
     "sourceMap": false,
+    "verbatimModuleSyntax": false,
     "types": ["node"],
     "paths": {
       "@qan-kit/chains": ["./packages/chains/src/index.ts"],
