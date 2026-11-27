@@ -18,6 +18,20 @@ describe('parseQvmctlFailure', () => {
       stderr:
         'time="2026-11-27 10:41:46" level=error msg="create deployer failed" error="Post \\"https://rpc-testnet.qanplatform.com\\": context deadline exceeded"\n',
     });
-    expect(message).toBe('create deployer failed');
+    expect(message).toBe(
+      'create deployer failed: Post "https://rpc-testnet.qanplatform.com": context deadline exceeded',
+    );
+  });
+
+  it('keeps the gas error qvmctl puts in the error field', () => {
+    const message = parseQvmctlFailure({
+      exitCode: 1,
+      stdout: '',
+      stderr:
+        'level=error msg="deploy contract failed" error="failed to estimate gas needed: insufficient funds for transfer"\n',
+    });
+    expect(message).toBe(
+      'deploy contract failed: failed to estimate gas needed: insufficient funds for transfer',
+    );
   });
 });

@@ -13,3 +13,4 @@ docs/.vitepress/dist
 examples/**/.next
 deployments
 .qan
+solc-build-cache

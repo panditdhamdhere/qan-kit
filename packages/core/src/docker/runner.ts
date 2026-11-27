@@ -173,7 +173,23 @@ export class DockerRunner {
     const rendered = redact(['docker', ...args].join(' '), this.secrets);
     if (this.verbose) this.ui.info(rendered);
 
-    const result = await this.exec.exec('docker', args, {
+    let result = await this.execDocker(args);
+    if (result.exitCode !== 0 && isDeployerTimeout(result)) {
+      if (this.verbose) {
+        this.ui.info('Public RPC timed out before qvmctl could start. Trying once more.');
+      }
+      result = await this.execDocker(args);
+    }
+
+    if (result.exitCode !== 0) {
+      const message = parseQvmctlFailure(result);
+      throw new QanError(ErrorCodes.QVMCTL_FAILED, message, hintForQvmctl(message));
+    }
+    return result;
+  }
+
+  private execDocker(args: string[]): Promise<ExecResult> {
+    return this.exec.exec('docker', args, {
       onStdout: (chunk) => {
         if (this.verbose) this.ui.info(chunk.trimEnd());
       },
@@ -181,16 +197,24 @@ export class DockerRunner {
         if (this.verbose) this.ui.info(chunk.trimEnd());
       },
     });
-
-    if (result.exitCode !== 0) {
-      throw new QanError(
-        ErrorCodes.QVMCTL_FAILED,
-        parseQvmctlFailure(result),
-        'Rerun with --verbose for the redacted log. `qan doctor` checks Docker, the image arch, and the RPC.',
-      );
-    }
-    return result;
   }
+}
+
+function isDeployerTimeout(result: ExecResult): boolean {
+  const message = parseQvmctlFailure(result);
+  return (
+    message.includes('create deployer failed') && message.includes('context deadline exceeded')
+  );
+}
+
+function hintForQvmctl(message: string): string {
+  if (/insufficient funds/i.test(message)) {
+    return 'This account has no QANX for gas. Request some at https://faucet.qanplatform.com from a normal browser (the faucet uses reCAPTCHA), then rerun the deploy.';
+  }
+  if (/context deadline exceeded/i.test(message)) {
+    return 'The public testnet RPC dropped the call. Run the command again. `qan doctor` checks that chain id 1121 still answers.';
+  }
+  return 'Rerun with --verbose for the redacted log. `qan doctor` checks Docker, the image arch, and the RPC.';
 }
 
 function dockerSpawnError(cause: unknown): QanError {

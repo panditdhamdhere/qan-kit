@@ -109,4 +109,70 @@ describe('DockerRunner', () => {
       message: 'expect at least one argument',
     });
   });
+
+  it('retries once when the public RPC times out before deploy starts', async () => {
+    let runs = 0;
+    const { runner, calls } = fakeExec((args) => {
+      if (args[0] === 'version') return { exitCode: 0, stdout: '27.4.0\n', stderr: '' };
+      if (args[0] === 'info') return { exitCode: 0, stdout: 'x86_64\n', stderr: '' };
+      runs += 1;
+      if (runs === 1) {
+        return {
+          exitCode: 1,
+          stdout: '',
+          stderr:
+            'level=error msg="create deployer failed" error="Post \\"https://rpc-testnet.qanplatform.com\\": context deadline exceeded"\n',
+        };
+      }
+      return { exitCode: 0, stdout: 'deployed\n', stderr: '' };
+    });
+    const docker = new DockerRunner({
+      exec: runner,
+      hostArch: 'x64',
+      ui: silentUi,
+      socketExists: () => false,
+      platform: 'linux',
+    });
+    const result = await docker.run({
+      image: 'qanplatform/qvmctl:latest',
+      projectDir: '/work',
+      containerWorkdir: '/ws',
+      mountDockerSocket: false,
+      qvmctlArgs: ['deploy'],
+    });
+    expect(result.stdout).toBe('deployed\n');
+    expect(calls.filter((call) => call[0] === 'run')).toHaveLength(2);
+  });
+
+  it('points an empty account at the faucet', async () => {
+    const { runner } = fakeExec((args) => {
+      if (args[0] === 'version') return { exitCode: 0, stdout: '27.4.0\n', stderr: '' };
+      if (args[0] === 'info') return { exitCode: 0, stdout: 'x86_64\n', stderr: '' };
+      return {
+        exitCode: 1,
+        stdout: '',
+        stderr:
+          'level=error msg="deploy contract failed" error="insufficient funds for transfer"\n',
+      };
+    });
+    const docker = new DockerRunner({
+      exec: runner,
+      hostArch: 'x64',
+      ui: silentUi,
+      socketExists: () => false,
+      platform: 'linux',
+    });
+    await expect(
+      docker.run({
+        image: 'qanplatform/qvmctl:latest',
+        projectDir: '/work',
+        containerWorkdir: '/ws',
+        mountDockerSocket: false,
+        qvmctlArgs: ['deploy'],
+      }),
+    ).rejects.toMatchObject({
+      code: 'QVMCTL_FAILED',
+      hint: expect.stringContaining('faucet.qanplatform.com'),
+    });
+  });
 });
