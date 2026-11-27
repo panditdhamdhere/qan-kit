@@ -3,6 +3,8 @@
   "references": [
     { "path": "./packages/chains" },
     { "path": "./packages/core" },
-    { "path": "./packages/cli" }
+    { "path": "./packages/cli" },
+    { "path": "./packages/hardhat-plugin" },
+    { "path": "./packages/sdk" }
   ]
 }

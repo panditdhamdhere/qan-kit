@@ -1,0 +1,32 @@
+{
+  "name": "@qan-kit/sdk",
+  "version": "0.1.0",
+  "description": "Typed helpers for QAN testnet",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panditdhamdhere/qan-kit.git",
+    "directory": "packages/sdk"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@qan-kit/chains": "workspace:*",
+    "@qan-kit/core": "workspace:*",
+    "viem": "^2.39.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1"
+  }
+}
