@@ -175,4 +175,36 @@ describe('DockerRunner', () => {
       hint: expect.stringContaining('faucet.qanplatform.com'),
     });
   });
+
+  it('points an unbound key at the XLINK container', async () => {
+    const { runner } = fakeExec((args) => {
+      if (args[0] === 'version') return { exitCode: 0, stdout: '27.4.0\n', stderr: '' };
+      if (args[0] === 'info') return { exitCode: 0, stdout: 'x86_64\n', stderr: '' };
+      return {
+        exitCode: 1,
+        stdout: '',
+        stderr: 'level=error msg="deploy contract failed" error="invalid xlink"\n',
+      };
+    });
+    const docker = new DockerRunner({
+      exec: runner,
+      hostArch: 'x64',
+      ui: silentUi,
+      socketExists: () => false,
+      platform: 'linux',
+    });
+    await expect(
+      docker.run({
+        image: 'qanplatform/qvmctl:latest',
+        projectDir: '/work',
+        containerWorkdir: '/ws',
+        mountDockerSocket: false,
+        qvmctlArgs: ['deploy'],
+      }),
+    ).rejects.toMatchObject({
+      code: 'QVMCTL_FAILED',
+      message: 'deploy contract failed: invalid xlink',
+      hint: expect.stringContaining('qanplatform/xlink:testnet'),
+    });
+  });
 });

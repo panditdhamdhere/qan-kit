@@ -211,6 +211,9 @@ function hintForQvmctl(message: string): string {
   if (/insufficient funds/i.test(message)) {
     return 'This account has no QANX for gas. Request some at https://faucet.qanplatform.com from a normal browser (the faucet uses reCAPTCHA), then rerun the deploy.';
   }
+  if (/invalid xlink/i.test(message)) {
+    return 'The testnet rejected this key because it is not an XLINK address. Start qanplatform/xlink:testnet, fund the address it prints, and deploy with the privkey from that volume. https://docs.qanplatform.com/testnet/setup/qan-xlink/docker';
+  }
   if (/context deadline exceeded/i.test(message)) {
     return 'The public testnet RPC dropped the call. Run the command again. `qan doctor` checks that chain id 1121 still answers.';
   }
