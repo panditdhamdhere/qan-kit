@@ -19,8 +19,16 @@ export function readGlobals(opts: {
   };
 }
 
+export function toJson(value: unknown): string {
+  return JSON.stringify(
+    value,
+    (_key, item) => (typeof item === 'bigint' ? item.toString() : item),
+    2,
+  );
+}
+
 export function printJson(value: unknown): void {
-  process.stdout.write(`${JSON.stringify(value, null, 2)}\n`);
+  process.stdout.write(`${toJson(value)}\n`);
 }
 
 export function reportError(error: unknown, json: boolean): number {

@@ -255,12 +255,8 @@ async function invoke(
   });
 }
 
-function emit(runtime: Runtime, value: unknown): void {
-  if (runtime.flags.json) {
-    printJson(value);
-    return;
-  }
-  process.stdout.write(`${JSON.stringify(value, null, 2)}\n`);
+function emit(_runtime: Runtime, value: unknown): void {
+  printJson(value);
 }
 
 function parseTemplate(value: string): InitTemplate {
