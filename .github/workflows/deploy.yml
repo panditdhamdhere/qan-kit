@@ -1,0 +1,13 @@
+name: Deploy Counter
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: panditdhamdhere/qan-kit/action@main
+        with:
+          contract: examples/solidity-counter/Counter.sol
+          name: Counter
+          private-key: ${{ secrets.QAN_PRIVATE_KEY }}
