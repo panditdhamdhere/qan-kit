@@ -1,4 +1,7 @@
-import { QAN_TESTNET_ID, QAN_TESTNET_RPC_URL } from '@qan-kit/chains';
+// Kept as literals so Hardhat 2 (CommonJS) can load this file.
+// packages/hardhat-plugin/src/network.test.ts checks they still match @qan-kit/chains.
+const QAN_TESTNET_ID = 1121;
+const QAN_TESTNET_RPC_URL = 'https://rpc-testnet.qanplatform.com';
 
 export interface QanHardhatNetwork {
   url: string;

@@ -8,5 +8,5 @@ export default defineConfig({
   dts: true,
   clean: true,
   sourcemap: true,
-  external: ['hardhat', 'hardhat/config', '@qan-kit/chains', '@qan-kit/core'],
+  external: ['hardhat', 'hardhat/config', '@qan-kit/core'],
 });

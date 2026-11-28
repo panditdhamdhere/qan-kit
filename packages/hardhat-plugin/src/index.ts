@@ -1,13 +1,4 @@
 import path from 'node:path';
-import {
-  DockerRunner,
-  createConsoleUi,
-  createExecaRunner,
-  deployContract,
-  loadConfig,
-  readPrivateKey,
-  viemReceiptWaiter,
-} from '@qan-kit/core';
 import { extendConfig, task } from 'hardhat/config';
 import type { HardhatConfig, HttpNetworkConfig } from 'hardhat/types';
 import { qanHardhatNetwork } from './network.js';
@@ -42,6 +33,18 @@ task('qan:deploy', 'Flatten a Hardhat contract and deploy it with qvmctl')
   .addParam('contract', 'Contract name, for example Counter')
   .addOptionalParam('args', 'Comma-separated constructor arguments')
   .setAction(async (args: { contract: string; args?: string }, hre) => {
+    const {
+      DockerRunner,
+      createConsoleUi,
+      createExecaRunner,
+      deployContract,
+      loadConfig,
+      loadDotEnv,
+      readPrivateKey,
+      viemReceiptWaiter,
+    } = await import('@qan-kit/core');
+    await loadDotEnv(hre.config.paths.root);
+    await loadDotEnv(process.cwd());
     const artifact = await hre.artifacts.readArtifact(args.contract);
     const cwd = hre.config.paths.root;
     const sourcePath = path.isAbsolute(artifact.sourceName)
