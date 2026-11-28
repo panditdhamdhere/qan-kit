@@ -10,11 +10,17 @@ Deploy to [QAN testnet](https://docs.qanplatform.com/testnet) (chain id 1121) wi
 
 ## Install
 
+`qan-kit` is not on npm yet. Clone the repo and build the `qan` binary:
+
 ```bash
-npm i -g qan-kit
+git clone https://github.com/panditdhamdhere/qan-kit.git
+cd qan-kit
+pnpm install
+pnpm build
+pnpm --filter qan-kit exec qan --help
 ```
 
-You need Docker. On Apple Silicon the qvmctl image is amd64-only, so the config asks for `--platform linux/amd64`.
+You need Docker, Node 20 or newer, and pnpm 10. On Apple Silicon the qvmctl image is amd64-only, so the config asks for `--platform linux/amd64`.
 
 ## Three commands
 
